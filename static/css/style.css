@@ -1,0 +1,129 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+}
+
+.form-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+form {
+    width: 100%;
+    max-width: 700px;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.step {
+    display: none;
+    animation: fade 0.3s ease;
+}
+
+.step.active {
+    display: block;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 26px;
+    text-align: center;
+}
+
+input[type="number"],
+select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+button {
+    border: none;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.next-btn,
+button[type="submit"] {
+    background: #111827;
+    color: white;
+}
+
+.prev-btn {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.house-card input {
+    display: none;
+}
+
+.card-content {
+    border: 2px solid transparent;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f9fafb;
+    cursor: pointer;
+    transition: 0.2s ease;
+    height: 100%;
+}
+
+.card-content img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    display: block;
+}
+
+.card-content h3 {
+    margin: 12px 12px 6px;
+    font-size: 18px;
+}
+
+.card-content p {
+    margin: 0 12px 14px;
+    color: #555;
+    font-size: 14px;
+}
+
+.house-card input:checked + .card-content {
+    border-color: #111827;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
