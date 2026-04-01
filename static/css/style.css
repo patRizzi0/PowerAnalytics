@@ -1,123 +1,251 @@
+/* ===== RISULTATO ===== */
+
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
+    font-family: 'Inter', sans-serif;
 }
 
-.form-wrapper {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.container-risultato {
+    width: 100%;
+    max-width: 700px;
+    margin: 40px auto;
     padding: 20px;
 }
 
-form {
-    width: 100%;
-    max-width: 700px;
-    background: white;
-    border-radius: 20px;
+/* BOX PRINCIPALE */
+.box-risultato {
+    background: linear-gradient(135deg, #111827, #374151);
+    color: white;
     padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-radius: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
+.box-risultato h2 {
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.risultato-numero {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+/* SPIEGAZIONE */   
+.box-spiegazione {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    font-size: 14px;
+    color: #555;
+    border: 1px solid #e5e7eb;
+}
+
+/* INSIGHT */
+.box-insight {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-insight {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    border-left: 4px solid #111827;
+    transition: 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.card-insight:hover {
+    transform: translateY(-2px);
+}
+
+.card-insight h3 {
+    margin-bottom: 6px;
+    font-size: 16px;
+}
+
+.card-insight p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* TITOLI SEZIONE */
+.section-title {
+    margin-bottom: 15px;
+    font-size: 20px;
+    text-align: center;
+}
+
+/* ===== WRAPPER GENERALE FORM ===== */
+.form-wrapper {
+    width: 100%;
+    max-width: 950px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+/* ===== FORM MULTISTEP ===== */
+#multiStepForm {
+    background: #ffffff;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+/* STEP */
 .step {
     display: none;
-    animation: fade 0.3s ease;
+    padding: 40px 30px;
+    animation: fadeSlide 0.35s ease;
 }
 
 .step.active {
     display: block;
 }
 
-h2 {
-    margin-bottom: 20px;
-    font-size: 26px;
+.step h2 {
     text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #111827;
+    font-weight: 700;
 }
 
-input[type="number"],
-select {
+/* ===== INPUT E SELECT ===== */
+#multiStepForm select,
+#multiStepForm input[type="number"] {
     width: 100%;
-    padding: 14px;
-    border: 1px solid #ccc;
+    max-width: 450px;
+    display: block;
+    margin: 0 auto 25px auto;
+    padding: 14px 16px;
+    border: 1px solid #d1d5db;
     border-radius: 12px;
     font-size: 16px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
+    background: #f9fafb;
+    color: #111827;
+    transition: all 0.2s ease;
+    outline: none;
 }
 
+#multiStepForm select:focus,
+#multiStepForm input[type="number"]:focus {
+    border-color: #111827;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.08);
+}
+
+/* ===== BOTTONI ===== */
 .buttons {
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
 }
 
-button {
+#multiStepForm button {
+    padding: 12px 24px;
     border: none;
-    padding: 14px 20px;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.next-btn,
-button[type="submit"] {
+/* Bottone avanti / submit */
+#multiStepForm .next-btn,
+#multiStepForm button[type="submit"] {
     background: #111827;
     color: white;
 }
 
-.prev-btn {
+#multiStepForm .next-btn:hover,
+#multiStepForm button[type="submit"]:hover {
+    background: #1f2937;
+    transform: translateY(-1px);
+}
+
+/* Bottone indietro */
+#multiStepForm .prev-btn {
     background: #e5e7eb;
     color: #111827;
 }
 
-.cards-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
+#multiStepForm .prev-btn:hover {
+    background: #d1d5db;
+    transform: translateY(-1px);
 }
 
-.house-card input {
+/* ===== CARDS TIPO ABITAZIONE ===== */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.house-card {
+    display: block;
+    cursor: pointer;
+}
+
+.house-card input[type="radio"] {
     display: none;
 }
 
 .card-content {
-    border: 2px solid transparent;
-    border-radius: 16px;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 18px;
     overflow: hidden;
-    background: #f9fafb;
-    cursor: pointer;
-    transition: 0.2s ease;
+    text-align: center;
+    transition: all 0.25s ease;
     height: 100%;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+
+.card-content:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    border-color: #9ca3af;
 }
 
 .card-content img {
     width: 100%;
-    height: 130px;
+    height: 150px;
     object-fit: cover;
     display: block;
 }
 
 .card-content h3 {
-    margin: 12px 12px 6px;
+    margin: 15px 10px 8px;
     font-size: 18px;
+    color: #111827;
 }
 
 .card-content p {
-    margin: 0 12px 14px;
-    color: #555;
     font-size: 14px;
+    color: #6b7280;
+    margin: 0 12px 18px;
 }
 
-.house-card input:checked + .card-content {
+/* CARD SELEZIONATA */
+.house-card input[type="radio"]:checked + .card-content {
     border-color: #111827;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    background: #f9fafb;
+    box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.08);
+    transform: translateY(-3px);
 }
 
-@keyframes fade {
+/* ===== ANIMAZIONE STEP ===== */
+@keyframes fadeSlide {
     from {
         opacity: 0;
         transform: translateY(12px);
@@ -126,4 +254,129 @@ button[type="submit"] {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .form-wrapper {
+        padding: 12px;
+        margin: 30px auto;
+    }
+
+    .step {
+        padding: 30px 18px;
+    }
+
+    .step h2 {
+        font-size: 22px;
+        margin-bottom: 22px;
+    }
+
+    .card-content img {
+        height: 130px;
+    }
+
+    #multiStepForm button {
+        width: 100%;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-card h3 {
+    font-size: 15px;
+    color: #6b7280;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    font-size: 26px;
+    font-weight: bold;
+    color: #111827;
+    margin: 0;
+}
+
+.stat-card span {
+    display: block;
+    font-size: 14px;
+    font-weight: normal;
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+/* ===== HERO / HOME ===== */
+.hero-description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #4b5563;
+    max-width: 650px;
+}
+
+/* ===== INTRO BOX ===== */
+.intro-box {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 28px 22px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+}
+
+.intro-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 10px;
+}
+
+.intro-text {
+    font-size: 15px;
+    color: #6b7280;
+    max-width: 720px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* ===== FEATURE CARDS CLICCABILI ===== */
+.feature-link {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.feature-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.feature-card {
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.feature-link:hover .feature-card {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.08);
 }

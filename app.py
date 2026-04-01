@@ -4,12 +4,15 @@ import requests
 
 from models.category_model import Category
 from models.device_model import Device
+from models.consumi_model import calcola_consumo_abitazione
 
 from service.converts import converts_json_eurostat
+from service.converts_paese_eurostat import converts_paese_eurostat
+from service.insights.router_insight import genera_insight_per_paese
 
 @app.route("/home")
 def home():
-    return render_template("home.html")
+    return render_template("pages/home.html")
 
 
 @app.route("/calcolo_elettrodomestico", methods=["GET", "POST"])
@@ -18,7 +21,7 @@ def elettrodomestici():
     all_categories = Category.query.all()
 
     return render_template(
-"calcolo_elettrodomestico.html",
+"pages/calcolo_elettrodomestico.html",
 devices=all_devices,
 categories=all_categories
 )
@@ -38,32 +41,74 @@ def get_device(device_id):
 
 @app.route("/consumi")
 def consumi():
-    return render_template("consumi.html")
+    return render_template("pages/consumi.html")
 
 @app.route("/eurostat")
 def statistiche():
-    return render_template("eurostat.html")
+    return render_template("pages/eurostat.html")
 
 @app.route("/filtro")
 def filtra_dati_eurostat():
     anno = request.args.get("data_bilan", default="2022")
+    paese = request.args.get("paese", default="belgio").strip().lower()
+    banda = request.args.get("banda", default="KWH2500-4999")
 
-    url = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ten00121"
+    dato_normalizzato = converts_paese_eurostat(paese, banda)
 
-    params = {
-        "time": anno,
-        "lang": "EN"
-    }
-
-    response = requests.get(url, params=params, timeout=20)
-    data = response.json()
-
-    dati_filtrati= converts_json_eurostat(data)
+    return render_template(
+"pages/filtro.html",
+data=dato_normalizzato,
+anno=anno,
+paese=paese,
+banda=banda
+)
 
 
-    return render_template("filtro.html", data=dati_filtrati, anno=anno)
+@app.route("/calcolo_consumi", methods=["GET", "POST"])
+def calcolo_consumi():
+    consumi = None
+    insights = {"generali": [], "personali": []}
 
+    paese = None
+    n_persone = None
+    m_quadri = None
+    stagione = None
+    tipo_abitazione = None
+
+    if request.method == "POST":
+        paese = request.form.get("paese")
+        n_persone = int(request.form.get("n_persone"))
+        m_quadri = int(request.form.get("m_quadri"))
+        stagione = request.form.get("stagione")
+        tipo_abitazione = request.form.get("tipo_abitazione")
+
+        consumi = calcola_consumo_abitazione(
+            paese, n_persone, m_quadri, stagione, tipo_abitazione
+        )
+
+        insights = genera_insight_per_paese(
+            paese=paese,
+            consumo=consumi["consumo_totale_kwh"],
+            costo=consumi["costo_stimato"],
+            prezzo_kwh=consumi["prezzo_kwh"],
+            n_persone=n_persone,
+            m_quadri=m_quadri,
+            stagione=stagione
+        )
+
+    return render_template(
+    "pages/calcolo_consumi.html",
+    consumi=consumi,
+    insights=insights,
+    paese=paese,
+    n_persone=n_persone,
+    m_quadri=m_quadri,
+    stagione=stagione
+)
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+

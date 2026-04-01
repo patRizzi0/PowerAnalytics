@@ -1,0 +1,55 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Titolo -->
+    <div class="row mb-4 text-center">
+        <div class="col">
+            <h1 class="fw-bold">Analisi energetica europea ⚡</h1>
+            <p class="text-muted">
+                Inserisci paese e anno per ottenere una panoramica completa
+            </p>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0 rounded-4 p-4">
+
+                <form method="GET" action="/filtro">
+
+                    <div class="mb-3">
+                        <label class="form-label">Paese</label>
+                        <select name="paese" class="form-select form-select-lg" required>
+                            <option value="">-- Seleziona un paese --</option>
+                            <option value="BE">Belgio</option>
+                            <option value="LU">Lussemburgo</option>
+                            <option value="FR">Francia</option>
+                            <option value="DE">Germania</option>
+                            <option value="IT">Italia</option>
+                            <option value="ES">Spagna</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Anno</label>
+                        <input type="number" name="data_bilan"
+                               class="form-control form-control-lg"
+                               min="1990" max="2026"
+                               placeholder="2025" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 btn-lg">
+                        Analizza
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{
+  "studio": {
+    "min_mq": 20,
+    "max_mq": 40,
+    "persone": [1]
+  },
+  "appart_piccolo": {
+    "min_mq": 40,
+    "max_mq": 70,
+    "persone": [1, 2]
+  },
+  "appart_medio": {
+    "min_mq": 70,
+    "max_mq": 100,
+    "persone": [2, 3]
+  },
+  "appart_grande": {
+    "min_mq": 100,
+    "max_mq": 130,
+    "persone": [3, 4]
+  },
+  "colocation": {
+    "min_mq": 80,
+    "max_mq": 150,
+    "persone": [3, 6]
+  },
+  "casa_schiera": {
+    "min_mq": 80,
+    "max_mq": 140,
+    "persone": [3, 5]
+  },
+  "casa_semindipendente": {
+    "min_mq": 100,
+    "max_mq": 180,
+    "persone": [3, 5]
+  },
+  "casa_indipendente": {
+    "min_mq": 120,
+    "max_mq": 250,
+    "persone": [3, 6]
+  }
+}

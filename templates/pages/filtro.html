@@ -1,0 +1,69 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="row mb-4 text-center">
+        <div class="col">
+            <h1 class="fw-bold">Risultati statistici europei</h1>
+            <p class="text-muted">
+                Ecco i dati energetici normalizzati per il paese selezionato
+            </p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+
+                    {% if data and not data.errore %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th>Paese</th>
+                                        <td>{{ data.paese }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Prezzo energia</th>
+                                        <td>{{ data.prezzo_kwh }} {{ data.unita }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fascia consumo</th>
+                                        <td>{{ data.fascia_consumo }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Tipo prezzo</th>
+                                        <td>{{ data.tipo_prezzo }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Anno</th>
+                                        <td>{{ data.anno }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fonte</th>
+                                        <td>{{ data.fonte }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <h4 class="mb-3">Nessun dato trovato</h4>
+                            <p class="text-muted mb-4">
+                                {{ data.errore if data and data.errore else "Prova a cambiare paese o fascia di consumo." }}
+                            </p>
+                            <a href="/eurostat" class="btn btn-success">
+                                Nuova ricerca
+                            </a>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

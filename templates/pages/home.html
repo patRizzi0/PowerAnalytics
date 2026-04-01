@@ -1,0 +1,92 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- HERO -->
+    <div class="row align-items-center mb-5">
+        <div class="col-12 col-lg-6">
+            <h1 class="fw-bold mb-3">
+                Monitora e ottimizza i tuoi consumi energetici ⚡
+            </h1>
+            <p class="text-muted mb-4">
+                Calcola il consumo della tua casa, analizza gli elettrodomestici
+                e scopri insight personalizzati per risparmiare energia e denaro.
+            </p>
+
+            <p class="hero-description">
+                Questo sito nasce con l’obiettivo di aiutare famiglie e utenti a comprendere meglio
+                i costi dell’energia elettrica, trasformando i dati in consapevolezza concreta.
+                Inizia subito a calcolare i tuoi consumi e scopri suggerimenti pratici per spendere meno.
+            </p>
+        </div>
+
+        <div class="col-12 col-lg-6 text-center mt-4 mt-lg-0">
+            <div class="p-4 rounded-4 shadow-sm bg-light">
+                <h5 class="text-muted">Esempio consumo</h5>
+                <div class="display-6 fw-bold text-success">
+                    2.340 kWh
+                </div>
+                <small class="text-muted">Stima annuale</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- MINI INTRO PRIMA DELLE CARD -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="intro-box text-center">
+                <h2 class="intro-title">Scopri dove puoi migliorare</h2>
+                <p class="intro-text mb-0">
+                    In pochi secondi puoi ottenere una stima chiara dei tuoi consumi
+                    e capire subito quali aree incidono di più sulla bolletta.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="row text-center g-4 mb-5">
+        <div class="col-12 col-md-6">
+            <a href="/calcolo_elettrodomestico" class="feature-link">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 feature-card">
+                    <div class="fs-1 mb-3">🔌</div>
+                    <h5>Elettrodomestici</h5>
+                    <p class="text-muted mb-0">
+                        Analizza il consumo dei tuoi dispositivi e scopri quali incidono di più.
+                    </p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <a href="/eurostat" class="feature-link">
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 feature-card">
+                    <div class="fs-1 mb-3">📊</div>
+                    <h5>Insight intelligenti</h5>
+                    <p class="text-muted mb-0">
+                        Ricevi consigli personalizzati per ridurre i costi e migliorare l’efficienza.
+                    </p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="row">
+        <div class="col text-center">
+            <div class="p-5 rounded-4 shadow-sm bg-success text-white">
+                <h2 class="mb-3">Inizia a risparmiare energia oggi</h2>
+                <p class="mb-4">
+                    Bastano pochi dati per ottenere una stima precisa dei tuoi consumi.
+                </p>
+
+                <a href="/consumi" class="btn btn-light btn-lg">
+                    Calcola ora
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

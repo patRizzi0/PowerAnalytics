@@ -1,10 +1,9 @@
-{% extends "base.html" %}
+{% extends "layout/base.html" %}
 
 {% block content %}
 
 <div class="form-wrapper">
-    <form id="multiStepForm">
-
+    <form id="multiStepForm" method="POST" action="/calcolo_consumi">
         <!-- STEP 1 -->
         <div class="step active">
             <h2>In che paese abiti?</h2>

@@ -1,0 +1,107 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-12 col-lg-10">
+            <div class="card shadow-sm border-0 rounded-4 text-center p-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">Consumo stimato annuale</h2>
+                    <div class="display-5 fw-bold text-success">
+                        {{ "%.0f"|format(consumi.consumo_totale_kwh) }} kWh
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center mb-4">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body text-center">
+                    <h3 class="h5 mb-3">Consumo totale</h3>
+                    <p class="fs-4 fw-semibold mb-0">
+                        {{ "%.0f"|format(consumi.consumo_totale_kwh) }}
+                        <span class="fs-6 text-muted">kWh/anno</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body text-center">
+                    <h3 class="h5 mb-3">Prezzo energia</h3>
+                    <p class="fs-4 fw-semibold mb-0">
+                        {{ "%.4f"|format(consumi.prezzo_kwh) }}
+                        <span class="fs-6 text-muted">€/kWh</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body text-center">
+                    <h3 class="h5 mb-3">Costo stimato</h3>
+                    <p class="fs-4 fw-semibold mb-0">
+                        {{ "%.2f"|format(consumi.costo_stimato) }}
+                        <span class="fs-6 text-muted">€/anno</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-12 col-lg-10">
+            <div class="alert alert-light border rounded-4 shadow-sm mb-0 text-center">
+                Questa stima è basata su paese, numero di persone,
+                dimensione dell’abitazione e stagione.
+            </div>
+        </div>
+    </div>
+
+    {% if insights.generali %}
+    <div class="row justify-content-center mb-4">
+        <div class="col-12 col-lg-10">
+            <h2 class="h3 mb-4">Insight generali</h2>
+            <div class="row g-4">
+                {% for insight in insights.generali %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-body">
+                            <h3 class="h5 mb-3 text-success">{{ insight.titolo }}</h3>
+                            <p class="mb-0 text-muted">{{ insight.testo }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if insights.personali %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <h2 class="h3 mb-4">Insight personalizzati</h2>
+            <div class="row g-4">
+                {% for insight in insights.personali %}
+                <div class="col-12 col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-body">
+                            <h3 class="h5 mb-3 text-warning">{{ insight.titolo }}</h3>
+                            <p class="mb-0 text-muted">{{ insight.testo }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
