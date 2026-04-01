@@ -33,7 +33,7 @@ I believe technology should be useful first.
 This project is my way of using programming to solve a real problem: helping people understand and manage something that affects them every day.
 
 ## *Scalability & Extensibility
-For simplicity, I decided to focus only on a few European countries (mainly the ones I live in or interact with), instead of covering the entire EU dataset.
+This project focuses on a limited set of countries for simplicity, but the backend structure has been designed so that extending it to a wider European scope would require minimal changes.
 
 However, the structure of the code allows it to be easily extended to all European countries without any major changes.
 
