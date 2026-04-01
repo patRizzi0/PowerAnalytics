@@ -31,3 +31,13 @@ The goal is not just to show numbers, but to give practical insights that can ac
 I believe technology should be useful first.
 
 This project is my way of using programming to solve a real problem: helping people understand and manage something that affects them every day.
+
+## *Scalability & Extensibility
+For simplicity, I decided to focus only on a few European countries (mainly the ones I live in or interact with), instead of covering the entire EU dataset.
+
+However, the structure of the code allows it to be easily extended to all European countries without any major changes.
+
+The backend is modular and designed to grow: new countries, new datasets or even new features can be added without rewriting the existing logic.
+
+In short, this is not a limited project, but a solid base that can evolve into a much more complete system.
+
