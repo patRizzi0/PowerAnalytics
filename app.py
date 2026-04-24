@@ -9,6 +9,7 @@ from models.consumi_model import calcola_consumo_abitazione
 from service.converts import converts_json_eurostat
 from service.converts_paese_eurostat import converts_paese_eurostat
 from service.insights.router_insight import genera_insight_per_paese
+from service.eurostat_service import EurostatService, get_country_by_code
 
 @app.route("/home")
 def home():
@@ -43,7 +44,7 @@ def get_device(device_id):
 def consumi():
     return render_template("pages/consumi.html")
 
-@app.route("/eurostat")
+@app.route("/eurostat" )
 def statistiche():
     return render_template("pages/eurostat.html")
 
@@ -106,6 +107,10 @@ def calcolo_consumi():
     stagione=stagione
 )
 
+@app.route("/test_eurostat")
+def test_eurostat():
+    dati = EurostatService.prendi_dati_grezzi("BE")
+    return jsonify(dati)
 
 if __name__ == "__main__":
     app.run(debug=True)
