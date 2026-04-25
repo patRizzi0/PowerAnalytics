@@ -28,8 +28,7 @@ class EurostatService:
             return response.json()
 
         except Exception as e:
-            print(f"Errore durante la chiamata: {e}")
-            return None
+            raise RuntimeError(f"Errore Eurostat: {e}")
 
 
 country_data = {

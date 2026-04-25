@@ -2,10 +2,6 @@
 __pycache__/
 *.pyc
 
-connection.py
-
-.env    
-
+.env 
+   
 venv
-
-requirements.txt

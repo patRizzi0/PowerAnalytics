@@ -1,0 +1,10 @@
+{
+    "studio": 0.85,
+    "appart_piccolo": 0.92,
+    "appart_medio": 1.00,
+    "appart_grande": 1.10,
+    "colocation": 1.08,
+    "casa_schiera": 1.18,
+    "casa_semindipendente": 1.28,
+    "casa_indipendente": 1.40
+}

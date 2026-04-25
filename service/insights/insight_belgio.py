@@ -5,6 +5,9 @@ import json
 def carica_dati_contesto():
     path = os.path.join("data", "energia.json")
 
+    if not os.path.exists(path):
+        return {}
+
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 

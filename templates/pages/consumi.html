@@ -4,10 +4,11 @@
 
 <div class="form-wrapper">
     <form id="multiStepForm" method="POST" action="/calcolo_consumi">
+
         <!-- STEP 1 -->
         <div class="step active">
             <h2>In che paese abiti?</h2>
-            <select name="paese" >
+            <select name="paese">
                 <option value="">Seleziona un paese</option>
                 <option value="belgio">Belgio</option>
                 <option value="lussemburgo">Lussemburgo</option>
@@ -18,7 +19,13 @@
         <!-- STEP 2 -->
         <div class="step">
             <h2>Quante persone vivono nell'abitazione?</h2>
-            <input type="number" name="n_persone" min="1" >
+            <select name="n_persone">
+                <option value="">Seleziona</option>
+                <option value="1">1 persona</option>
+                <option value="2">2–3 persone</option>
+                <option value="5">4–5 persone</option>
+                <option value="8">6 o più persone</option>
+            </select>
             <div class="buttons">
                 <button type="button" class="prev-btn">Indietro</button>
                 <button type="button" class="next-btn">Avanti</button>
@@ -28,7 +35,13 @@
         <!-- STEP 3 -->
         <div class="step">
             <h2>Quanti metri quadri ha l'abitazione?</h2>
-            <input type="number" name="m_quadri" min="20" >
+            <select name="m_quadri">
+                <option value="">Seleziona</option>
+                <option value="30">Meno di 50 m²</option>
+                <option value="60">50–90 m²</option>
+                <option value="110">90–130 m²</option>
+                <option value="160">Più di 130 m²</option>
+            </select>
             <div class="buttons">
                 <button type="button" class="prev-btn">Indietro</button>
                 <button type="button" class="next-btn">Avanti</button>
@@ -38,7 +51,7 @@
         <!-- STEP 4 -->
         <div class="step">
             <h2>In che stagione vuoi simulare la bolletta?</h2>
-            <select name="stagione" >
+            <select name="stagione">
                 <option value="">Seleziona una stagione</option>
                 <option value="estate">Estate</option>
                 <option value="inverno">Inverno</option>
@@ -54,7 +67,6 @@
         <!-- STEP 5 -->
         <div class="step">
             <h2>Scegli il tipo di abitazione</h2>
-
             <div class="cards-container">
                 <label class="house-card">
                     <input type="radio" name="tipo_abitazione" value="studio" required>
@@ -64,71 +76,63 @@
                         <p>20–40 m² • 1 persona</p>
                     </div>
                 </label>
-
                 <label class="house-card">
                     <input type="radio" name="tipo_abitazione" value="appart_piccolo">
                     <div class="card-content">
-                        <img src="static/img/appart_piccolo.jpg" alt="Appartamento piccolo">
+                        <img src="/static/img/appart_piccolo.jpg" alt="Appartamento piccolo">
                         <h3>Appartamento piccolo</h3>
                         <p>40–70 m² • 1–2 persone</p>
                     </div>
                 </label>
-
                 <label class="house-card">
                     <input type="radio" name="tipo_abitazione" value="appart_medio">
                     <div class="card-content">
-                        <img src="static/img/appart_medio.png" alt="Appartamento medio">
+                        <img src="/static/img/appart_medio.png" alt="Appartamento medio">
                         <h3>Appartamento medio</h3>
                         <p>70–100 m² • 2–3 persone</p>
                     </div>
                 </label>
-
                 <label class="house-card">
                     <input type="radio" name="tipo_abitazione" value="appart_grande">
                     <div class="card-content">
-                        <img src="static/img/appart_grande.jpg" alt="Appartamento grande">
+                        <img src="/static/img/appart_grande.jpg" alt="Appartamento grande">
                         <h3>Appartamento grande</h3>
                         <p>100–130 m² • 3–4 persone</p>
                     </div>
                 </label>
-
                 <label class="house-card">
                     <input type="radio" name="tipo_abitazione" value="colocation">
                     <div class="card-content">
-                        <img src="static/img/colocation.jpg" alt="Colocation">
+                        <img src="/static/img/colocation.jpg" alt="Colocation">
                         <h3>Colocation</h3>
                         <p>80–150 m² • 3–6 persone</p>
                     </div>
                 </label>
-
                 <label class="house-card">
                     <input type="radio" name="tipo_abitazione" value="casa_schiera">
                     <div class="card-content">
-                        <img src="static/img/casa_schiera.jpeg" alt="Casa a schiera">
+                        <img src="/static/img/casa_schiera.jpeg" alt="Casa a schiera">
                         <h3>Casa a schiera</h3>
                         <p>80–140 m² • 3–5 persone</p>
                     </div>
                 </label>
-
                 <label class="house-card">
                     <input type="radio" name="tipo_abitazione" value="casa_semindipendente">
                     <div class="card-content">
-                        <img src="static/img/casa_semindipendente.jpg" alt="Casa semi-indipendente">
+                        <img src="/static/img/casa_semindipendente.jpg" alt="Casa semi-indipendente">
                         <h3>Casa semi-indipendente</h3>
                         <p>100–180 m² • 3–5 persone</p>
                     </div>
                 </label>
-
                 <label class="house-card">
                     <input type="radio" name="tipo_abitazione" value="casa_indipendente">
                     <div class="card-content">
-                        <img src="static/img/casa_indipendente.jpg" alt="Casa indipendente">
+                        <img src="/static/img/casa_indipendente.jpg" alt="Casa indipendente">
                         <h3>Casa indipendente</h3>
                         <p>120–250 m² • 3–6 persone</p>
                     </div>
                 </label>
             </div>
-
             <div class="buttons">
                 <button type="button" class="prev-btn">Indietro</button>
                 <button type="submit">Calcola</button>
@@ -138,4 +142,4 @@
     </form>
 </div>
 
-{%endblock%}
+{% endblock %}
