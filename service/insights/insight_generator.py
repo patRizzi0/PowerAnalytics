@@ -1,5 +1,15 @@
 from models.Rule import Rule
 from service.build_dict_rule import build_dict_rule
+from service.calculators.build_description import build_description
+from service.calculators.key_precedent import _last_key
+
+
+def _storico_con_precedente(storico):
+    """Verifica che esistano ultimo periodo e corrispondente anno precedente."""
+    if not storico:
+        return False
+    previous_key = _last_key(storico)
+    return previous_key in storico
 
 
 regole = [
@@ -19,6 +29,14 @@ regole = [
         ),
         score=10,
     ),
+    Rule(
+        condizione=lambda storico, **kw: _storico_con_precedente(storico),
+        gruppo="tendenza",
+        descrizione=lambda storico, **kw: (
+            build_description(storico)
+        ),
+        score=10,
+    )
 ]
 
 building_dict = build_dict_rule(regole)
@@ -42,7 +60,7 @@ def generate_insight(**kwargs):
                 destinazione = _destinazione_insight(gruppo)
                 insights[destinazione].append({
                     "titolo": gruppo.capitalize(),
-                    "testo": descrizione,
+                    "testo": descrizione
                 })
                 break
 

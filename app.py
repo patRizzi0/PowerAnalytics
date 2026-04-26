@@ -119,6 +119,7 @@ def calcolo_consumi():
             consumo = consumi["consumo_totale_kwh"]
             costo = consumi["costo_stimato"]
             prezzo_kwh = consumi["prezzo_kwh"]
+            storico = consumi.get("storico", {})
         except KeyError as e:
             return render_template(
                 "pages/calcolo_consumi.html",
@@ -133,7 +134,8 @@ def calcolo_consumi():
             n_persone=n_persone,
             m_quadri=m_quadri,
             stagione=stagione,
-            tipo_abitazione=tipo_abitazione
+            tipo_abitazione=tipo_abitazione,
+            storico=storico
         )
 
     return render_template(

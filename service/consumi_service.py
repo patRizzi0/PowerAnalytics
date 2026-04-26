@@ -22,7 +22,20 @@ coeff_tipo = carica_coefficiente("coeff_appartamento.json")
 
 def calcola_consumo_abitazione(paese, n_persone, m_quadri, stagione, tipo_abitazione):
     """Calcola consumo annuo e costo stimato partendo dai dati del form."""
+    try:
+        n_persone = int(n_persone)
+        m_quadri = float(m_quadri)
+    except (TypeError, ValueError):
+        raise RuntimeError("Persone e metri quadri devono essere valori numerici.")
+
+    if n_persone <= 0:
+        raise RuntimeError("Il numero di persone deve essere maggiore di zero.")
+
+    if m_quadri <= 0:
+        raise RuntimeError("I metri quadri devono essere maggiori di zero.")
+
     dati_prezzo = converts_paese_eurostat(paese)
+
     if "errore" in dati_prezzo:
         raise RuntimeError(dati_prezzo["errore"])
 
@@ -32,7 +45,11 @@ def calcola_consumo_abitazione(paese, n_persone, m_quadri, stagione, tipo_abitaz
     if stagione not in coeff_stagione:
         raise RuntimeError("Stagione non valida.")
 
-    prezzo_kwh = dati_prezzo["prezzo_kwh"]
+    try:
+        prezzo_kwh = float(dati_prezzo["prezzo_kwh"])
+    except (KeyError, TypeError, ValueError):
+        raise RuntimeError("Prezzo kWh non valido.")
+
     consumo_superficie = m_quadri * COEFF_MQ
     consumo_persone = multiplier_consumi(n_persone)
 
@@ -51,4 +68,5 @@ def calcola_consumo_abitazione(paese, n_persone, m_quadri, stagione, tipo_abitaz
         "anno": dati_prezzo["anno"],
         "paese": dati_prezzo["paese"],
         "fonte": dati_prezzo["fonte"],
+        "storico": dati_prezzo["storico"]
     }
