@@ -4,9 +4,13 @@ class Rule:
         self.gruppo = gruppo
         self.descrizione = descrizione
         self.score = score
-    
-    # Valuta la regola in base ai parametri forniti
+
     def evaluate(self, **kwargs):
-        if self.condizione(**kwargs):
-            return True, self.descrizione(**kwargs)
+        """Valuta la regola con i dati disponibili e restituisce l'eventuale testo."""
+        try:
+            if self.condizione(**kwargs):
+                return True, self.descrizione(**kwargs)
+        except (KeyError, TypeError, ValueError):
+            return False, None
+
         return False, None

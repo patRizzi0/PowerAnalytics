@@ -1,44 +1,49 @@
 from models.Rule import Rule
 from service.build_dict_rule import build_dict_rule
-from service.calculators.media_nazionale import get_national_average
+
 
 regole = [
     Rule(
-        condizione = lambda consumo, **kw: consumo > 5000,
-        gruppo = "consumo",
-        descrizione = lambda consumo, **kw: f"Il tuo consumo annuo di {consumo} kWh è superiore alla media nazionale.",
-        score = 10
+        condizione=lambda consumo, **kw: consumo > 5000,
+        gruppo="consumo",
+        descrizione=lambda consumo, **kw: (
+            f"Il tuo consumo annuo di {consumo} kWh e' superiore alla soglia di attenzione."
+        ),
+        score=10,
     ),
     Rule(
-        condizione = lambda costo, **kw: costo > 1000,
-        gruppo = "costo",
-        descrizione = lambda costo, **kw: f"Il tuo costo annuo stimato di {costo} EUR è superiore alla media nazionale.",
-        score = 10
+        condizione=lambda costo, **kw: costo > 1000,
+        gruppo="costo",
+        descrizione=lambda costo, **kw: (
+            f"Il tuo costo annuo stimato di {costo} EUR e' superiore alla soglia di attenzione."
+        ),
+        score=10,
     ),
-    Rule(
-        condizione = lambda paese, consumo, **kw: consumo > get_national_average(paese)["prezzo_kwh"],
-        gruppo = "rischio",
-        descrizione = lambda consumo, **kw: f"Il tuo consumo annuo di {consumo} kWh è superiore alla media nazionale.",
-        score = 10
-    )
 ]
 
 building_dict = build_dict_rule(regole)
 
+
+def _destinazione_insight(gruppo):
+    """Mantiene compatibile l'output con il template esistente."""
+    if gruppo in ("generale", "generali"):
+        return "generali"
+    return "personali"
+
+
 def generate_insight(**kwargs):
-    insights = []
+    """Valuta le regole e restituisce insight divisi per sezione del template."""
+    insights = {"generali": [], "personali": []}
 
-    for gruppo, regole in building_dict.items():
-        for regola in sorted(regole, key=lambda r: r["score"], reverse=True):
-            valutazione = regola["condizione"](**kwargs)
+    for gruppo, regole_gruppo in building_dict.items():
+        for rule in sorted(regole_gruppo, key=lambda r: r.score, reverse=True):
+            valutazione, descrizione = rule.evaluate(**kwargs)
             if valutazione:
-                descrizione = regola["descrizione"](**kwargs)
-                insights.append({
-                    "gruppo": gruppo,
-                    "descrizione": descrizione
+                destinazione = _destinazione_insight(gruppo)
+                insights[destinazione].append({
+                    "titolo": gruppo.capitalize(),
+                    "testo": descrizione,
                 })
-                break  # Esce dopo aver valutato il primo gruppo di regole
-
+                break
 
     return insights
-
