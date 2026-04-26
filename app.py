@@ -5,6 +5,7 @@ from models.category_model import Category
 from models.device_model import Device
 from service.consumi_service import calcola_consumo_abitazione
 from service.converts_paese_eurostat import converts_paese_eurostat
+from service.insights.insight_generator import generate_insight
 from service.insights.router_insight import genera_insight_per_paese
 from service.eurostat_service import EurostatService
 from service.validators import check_input
@@ -115,14 +116,13 @@ def calcolo_consumi():
                 error=f"Errore nel calcolo dei consumi: {e}"
             )
 
-        insights = genera_insight_per_paese(
-            paese=paese,
-            consumo=consumi["consumo_totale_kwh"],
-            costo=consumi["costo_stimato"],
-            prezzo_kwh=consumi["prezzo_kwh"],
-            n_persone=n_persone,
-            m_quadri=m_quadri,
-            stagione=stagione
+        insights = generate_insight(
+            paese = paese,
+            n_persone = n_persone,
+            m_quadri = m_quadri,
+            stagione = stagione,
+            tipo_abitazione = tipo_abitazione,
+            consumi = consumi
         )
 
     return render_template(
@@ -132,8 +132,9 @@ def calcolo_consumi():
         paese=paese,
         n_persone=n_persone,
         m_quadri=m_quadri,
-        stagione=stagione
-    )
+        stagione=stagione,
+        tipo_abitazione=tipo_abitazione
+        )
 
 
 @app.route("/test_eurostat")
