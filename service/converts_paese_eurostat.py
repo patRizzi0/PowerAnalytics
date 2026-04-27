@@ -128,6 +128,9 @@ def converts_paese_eurostat(paese, banda="KWH2500-4999"):
     codice_paese = normalizza_codice_paese(paese)
     data = EurostatService.prendi_dati_grezzi(codice_paese, banda)
 
+    if data is None:
+        return {"errore": "Dati Eurostat temporaneamente non disponibili"}
+
     storico = _storico_da_eurostat(data)
     if not storico:
         return {"errore": "Nessun dato disponibile"}

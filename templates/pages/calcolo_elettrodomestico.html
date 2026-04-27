@@ -3,6 +3,16 @@
 {% block content %}
 <div class="container py-5">
 
+    {% if error %}
+    <div class="row justify-content-center mb-4">
+        <div class="col-12 col-lg-8">
+            <div class="alert alert-danger mb-0">
+                {{ error }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Titolo -->
     <div class="row mb-4">
         <div class="col text-center">
@@ -38,6 +48,9 @@
 
     <!-- Risultati -->
     <div class="row g-4 justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="alert alert-danger d-none mb-0" id="device_error"></div>
+        </div>
 
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card shadow-sm border-0 rounded-4 text-center p-4 h-100">
@@ -70,9 +83,21 @@
 <!-- JS -->
 <script>
 const select = document.getElementById("device_select");
+const deviceError = document.getElementById("device_error");
+
+function showDeviceError(message) {
+    deviceError.textContent = message;
+    deviceError.classList.remove("d-none");
+}
+
+function hideDeviceError() {
+    deviceError.textContent = "";
+    deviceError.classList.add("d-none");
+}
 
 select.addEventListener("change", async function () {
     const deviceId = this.value;
+    hideDeviceError();
 
     if (!deviceId) {
         document.getElementById("device_watts").textContent = "-";
@@ -82,12 +107,11 @@ select.addEventListener("change", async function () {
 
     try {
         const response = await fetch(`/device/${deviceId}`);
+        const data = await response.json().catch(() => ({}));
 
         if (!response.ok) {
-            throw new Error("Errore nel recupero del dispositivo");
+            throw new Error(data.errore || "Errore nel recupero del dispositivo");
         }
-
-        const data = await response.json();
 
         document.getElementById("device_watts").textContent = data.average_watts;
         document.getElementById("device_standby").textContent = data.standby_watts;
@@ -96,6 +120,7 @@ select.addEventListener("change", async function () {
         console.error(error);
         document.getElementById("device_watts").textContent = "Errore";
         document.getElementById("device_standby").textContent = "Errore";
+        showDeviceError(error.message || "Non riesco a recuperare il dispositivo in questo momento.");
     }
 });
 </script>
