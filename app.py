@@ -1,3 +1,5 @@
+import os
+
 from flask import render_template, jsonify, request
 from connection import app
 
@@ -150,11 +152,12 @@ def calcolo_consumi():
         )
 
 
-@app.route("/test_eurostat")
-def test_eurostat():
-    """Endpoint tecnico per verificare la risposta grezza di Eurostat."""
-    dati = EurostatService.prendi_dati_grezzi("BE")
-    return jsonify(dati)
+if os.getenv("FLASK_ENV") == "development" or os.getenv("FLASK_DEBUG") == "1":
+    @app.route("/debug/test_eurostat")
+    def test_eurostat():
+        """Endpoint tecnico per verificare la risposta grezza di Eurostat."""
+        dati = EurostatService.prendi_dati_grezzi("BE")
+        return jsonify(dati)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=os.getenv("FLASK_DEBUG") == "1")
