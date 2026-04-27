@@ -48,6 +48,14 @@
                                 </tbody>
                             </table>
                         </div>
+                        {% if data.storico %}
+                            <div class="mt-4">
+                                <h2 class="h5 mb-3">Andamento prezzo kWh</h2>
+                                <div class="chart-container">
+                                    <canvas id="prezzoKwhChart"></canvas>
+                                </div>
+                            </div>
+                        {% endif %}
                     {% else %}
                         <div class="text-center py-4">
                             <h4 class="mb-3">Nessun dato trovato</h4>
@@ -66,4 +74,15 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% if data and data.storico %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/grafico.js') }}"></script>
+<script>
+    const storicoPrezzi = {{ data.storico | tojson }};
+    renderPrezzoKwhChart("prezzoKwhChart", storicoPrezzi);
+</script>
+{% endif %}
 {% endblock %}

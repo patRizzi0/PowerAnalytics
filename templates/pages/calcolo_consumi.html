@@ -73,6 +73,21 @@
             </div>
         </div>
     </div>
+
+    {% if consumi.storico %}
+    <div class="row justify-content-center mb-5">
+        <div class="col-12 col-lg-10">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-3">Andamento prezzo kWh</h2>
+                    <div class="chart-container">
+                        <canvas id="prezzoKwhChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     {% endif %}
 
     {% if insights.generali %}
@@ -116,4 +131,15 @@
     {% endif %}
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% if consumi and consumi.storico %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/grafico.js') }}"></script>
+<script>
+    const storicoPrezzi = {{ consumi.storico | tojson }};
+    renderPrezzoKwhChart("prezzoKwhChart", storicoPrezzi);
+</script>
+{% endif %}
 {% endblock %}
