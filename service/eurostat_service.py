@@ -10,9 +10,6 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from models.country_model import Country
-
-
 logger = logging.getLogger(__name__)
 
 
@@ -203,24 +200,3 @@ class EurostatService:
             raise_on_status=False
         )
         return retry_strategy
-
-
-country_data = {
-    "BE": Country("BE", "Belgio", "Belgium"),
-    "LU": Country("LU", "Lussemburgo", "Luxembourg"),
-    "IT": Country("IT", "Italia", "Italy"),
-    "ES": Country("ES", "Spagna", "Spain"),
-    "DE": Country("DE", "Germania", "Germany"),
-    "NL": Country("NL", "Paesi Bassi", "Netherlands")
-}
-
-
-def get_country_by_code(iso_code):
-    paese = country_data.get(iso_code.upper())
-    if not paese:
-        return None
-    return {
-        "iso_code": paese.iso_code,
-        "name_it": paese.name_it,
-        "name_en": paese.name_en
-    }

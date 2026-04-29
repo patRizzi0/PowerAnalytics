@@ -3,45 +3,7 @@ import re
 import unicodedata
 
 from service.eurostat_service import EurostatService
-
-
-CODICI_PAESE = {
-    "belgio": "BE",
-    "be": "BE",
-    "belgium": "BE",
-    "lussemburgo": "LU",
-    "lu": "LU",
-    "luxembourg": "LU",
-    "italia": "IT",
-    "repubblica italiana": "IT",
-    "italy": "IT",
-    "it": "IT",
-    "ita": "IT",
-    "spagna": "ES",
-    "regno di spagna": "ES",
-    "spain": "ES",
-    "es": "ES",
-    "esp": "ES",
-    "germania": "DE",
-    "repubblica federale tedesca": "DE",
-    "repubblica federale di germania": "DE",
-    "rft": "DE",
-    "germany": "DE",
-    "deutschland": "DE",
-    "de": "DE",
-    "deu": "DE",
-    "ger": "DE",
-    "paesi bassi": "NL",
-    "paesibassi": "NL",
-    "olanda": "NL",
-    "regno dei paesi bassi": "NL",
-    "regno d olanda": "NL",
-    "netherlands": "NL",
-    "nederland": "NL",
-    "holland": "NL",
-    "nl": "NL",
-    "nld": "NL",
-}
+from service.countries import CODICI_PAESE
 
 
 def _normalizza_testo(valore):

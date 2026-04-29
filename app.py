@@ -9,11 +9,13 @@ from connection import app
 
 from models.category_model import Category
 from models.device_model import Device
+from service.calculators.fetch_paese import fetch_paese
 from service.consumi_service import calcola_consumo_abitazione
 from service.converts_paese_eurostat import converts_paese_eurostat
 from service.insights.insight_generator import generate_insight
 from service.eurostat_service import EurostatService
 from service.validators import check_input
+from service.countries import SUPPORTED_COUNTRIES
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
@@ -107,7 +109,7 @@ def get_device(device_id):
 @app.route("/consumi")
 def consumi():
     """Mostra il form guidato per stimare i consumi domestici."""
-    return render_template("pages/consumi.html")
+    return render_template("pages/consumi.html", paesi=SUPPORTED_COUNTRIES)
 
 
 @app.route("/eurostat")
@@ -235,6 +237,51 @@ def calcolo_consumi():
         stagione=stagione,
         tipo_abitazione=tipo_abitazione
         )
+
+
+@app.route("/confronto", methods=["GET", "POST"])
+def confronto():
+    """Confronta il prezzo dell'energia tra due paesi."""
+    paesi = {code: info["it"] for code, info in SUPPORTED_COUNTRIES.items()}
+    dati_a = None
+    dati_b = None
+    errore_a = None
+    errore_b = None
+    paese_a = None
+    paese_b = None
+
+    if request.method == "POST":
+        paese_a = request.form.get("paese_a", "").strip().lower()
+        paese_b = request.form.get("paese_b", "").strip().lower()
+
+        try:
+            dati_a = fetch_paese(paese_a)
+            if dati_a is not None and "errore" in dati_a:
+                errore_a = dati_a["errore"]
+                dati_a = None
+        except Exception as e:
+            logger.warning("Errore paese A (%s): %s", paese_a, e)
+            errore_a = "Non riesco a recuperare i dati per questo paese."
+
+        try:
+            dati_b = fetch_paese(paese_b)
+            if dati_b is not None and "errore" in dati_b:
+                errore_b = dati_b["errore"]
+                dati_b = None
+        except Exception as e:
+            logger.warning("Errore paese B (%s): %s", paese_b, e)
+            errore_b = "Non riesco a recuperare i dati per questo paese."
+
+    return render_template(
+        "pages/confronto.html",
+        paesi=paesi,
+        dati_a=dati_a,
+        dati_b=dati_b,
+        errore_a=errore_a,
+        errore_b=errore_b,
+        paese_a=paese_a,
+        paese_b=paese_b,
+    )
 
 
 if os.getenv("FLASK_ENV") == "development" or os.getenv("FLASK_DEBUG") == "1":

@@ -1,7 +1,35 @@
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
-.env 
-   
-venv
+# Ambiente virtuale
+venv/
+.venv/
+
+# Variabili d'ambiente
+.env
+.env.*
+
+# Database
+*.db
+*.sqlite3
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Distribution
+dist/
+build/
+*.egg-info/
+
+# Claude Code internal
+.claude/

@@ -1,0 +1,113 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Confronto Prezzi — Domestic Energy{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-12 col-lg-8">
+            <h1 class="h3 mb-1">Confronto prezzi energia</h1>
+            <p class="text-muted">Seleziona due paesi per confrontare il prezzo dell'energia elettrica.</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <form method="POST" action="/confronto">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-12 col-md-5">
+                                <label class="form-label fw-semibold" for="paese_a">Primo paese</label>
+                                <select class="form-select" id="paese_a" name="paese_a" required>
+                                    <option value="" disabled {% if not paese_a %}selected{% endif %}>Seleziona...</option>
+                                    {% for code, nome in paesi.items() %}
+                                    <option value="{{ nome | lower }}" {% if paese_a == nome | lower %}selected{% endif %}>{{ nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-2 text-center">
+                                <span class="fs-4 text-muted">vs</span>
+                            </div>
+                            <div class="col-12 col-md-5">
+                                <label class="form-label fw-semibold" for="paese_b">Secondo paese</label>
+                                <select class="form-select" id="paese_b" name="paese_b" required>
+                                    <option value="" disabled {% if not paese_b %}selected{% endif %}>Seleziona...</option>
+                                    {% for code, nome in paesi.items() %}
+                                    <option value="{{ nome | lower }}" {% if paese_b == nome | lower %}selected{% endif %}>{{ nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button type="submit" class="btn btn-dark px-4">Confronta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if dati_a or dati_b or errore_a or errore_b %}
+    {% set a_cheaper = dati_a and dati_b and dati_a.prezzo_kwh < dati_b.prezzo_kwh %}
+    {% set b_cheaper = dati_a and dati_b and dati_b.prezzo_kwh < dati_a.prezzo_kwh %}
+
+    <div class="row g-4 justify-content-center">
+
+        <div class="col-12 col-md-5">
+            {% if errore_a %}
+            <div class="alert alert-danger rounded-4">{{ errore_a }}</div>
+            {% elif dati_a %}
+            <div class="card shadow-sm border-0 rounded-4 h-100 {% if a_cheaper %}border border-success border-2{% endif %}">
+                <div class="card-body text-center p-4">
+                    {% if a_cheaper %}
+                    <span class="badge bg-success mb-3">Più economico</span>
+                    {% endif %}
+                    <h2 class="h4 mb-4">{{ paesi.get(dati_a.paese, dati_a.paese) }}</h2>
+                    <p class="display-6 fw-bold {% if a_cheaper %}text-success{% else %}text-body{% endif %} mb-1">
+                        {{ "%.4f"|format(dati_a.prezzo_kwh) }}
+                    </p>
+                    <p class="text-muted mb-4">€/kWh</p>
+                    <p class="text-muted small mb-0">Dato {{ dati_a.anno }} · {{ dati_a.fonte }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-12 col-md-5">
+            {% if errore_b %}
+            <div class="alert alert-danger rounded-4">{{ errore_b }}</div>
+            {% elif dati_b %}
+            <div class="card shadow-sm border-0 rounded-4 h-100 {% if b_cheaper %}border border-success border-2{% endif %}">
+                <div class="card-body text-center p-4">
+                    {% if b_cheaper %}
+                    <span class="badge bg-success mb-3">Più economico</span>
+                    {% endif %}
+                    <h2 class="h4 mb-4">{{ paesi.get(dati_b.paese, dati_b.paese) }}</h2>
+                    <p class="display-6 fw-bold {% if b_cheaper %}text-success{% else %}text-body{% endif %} mb-1">
+                        {{ "%.4f"|format(dati_b.prezzo_kwh) }}
+                    </p>
+                    <p class="text-muted mb-4">€/kWh</p>
+                    <p class="text-muted small mb-0">Dato {{ dati_b.anno }} · {{ dati_b.fonte }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    {% if dati_a and dati_b and not a_cheaper and not b_cheaper %}
+    <div class="row justify-content-center mt-4">
+        <div class="col-12 col-lg-8">
+            <div class="alert alert-light border rounded-4 text-center mb-0">
+                I due paesi hanno lo stesso prezzo per kWh.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+
+</div>
+{% endblock %}

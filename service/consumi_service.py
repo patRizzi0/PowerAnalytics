@@ -31,8 +31,8 @@ def calcola_consumo_abitazione(paese, n_persone, m_quadri, stagione, tipo_abitaz
     if n_persone <= 0:
         raise RuntimeError("Il numero di persone deve essere maggiore di zero.")
 
-    if m_quadri <= 0:
-        raise RuntimeError("I metri quadri devono essere maggiori di zero.")
+    if m_quadri < 20:
+        raise RuntimeError("I metri quadri devono essere almeno 20.")
 
     dati_prezzo = converts_paese_eurostat(paese)
 

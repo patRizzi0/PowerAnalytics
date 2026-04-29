@@ -10,8 +10,9 @@
             <h2>In che paese abiti?</h2>
             <select name="paese">
                 <option value="">Seleziona un paese</option>
-                <option value="belgio">Belgio</option>
-                <option value="lussemburgo">Lussemburgo</option>
+                {% for code, paese in paesi.items() %}
+                <option value="{{ code | lower}}"> {{ paese["it"] }} </option>
+                {% endfor %}
             </select>
             <button type="button" class="next-btn">Avanti</button>
         </div>
