@@ -1,20 +1,21 @@
-def converts_json_eurostat(data):
-    geo_category = data["dimension"]["geo"]["category"]
-    geo_index = geo_category["index"]      # es: {"BE": 4, "IT": 15, ...}
-    geo_labels = geo_category["label"]     # es: {"BE": "Belgium", ...}
+import requests
 
-    values = data["value"]                 # es: {"0": 123, "1": 456, ...}
 
-    dati_filtrati = []
+def prezzi_francia(url):
+    response = requests.get(url, timeout=20)
+    response.raise_for_status()
+    data = response.json()
 
-    for codice, posizione in geo_index.items():
-        if len(codice) == 2:  # tiene solo i paesi veri
-            valore = values.get(str(posizione))  # attenzione: le chiavi di value sono stringhe
+    labels = data["dimension"]["time"]["category"]["label"]
+    indici = data["dimension"]["time"]["category"]["index"]
+    valori = data["value"]
 
-            dati_filtrati.append({
-                "codice": codice,
-                "nome_paese": geo_labels[codice],
-                "dato": valore
-            })
+    prezzi = {}
 
-    return dati_filtrati
+    for time_key, posizione in indici.items():
+        label = labels.get(time_key, time_key)
+        valore = valori.get(str(posizione))
+
+        prezzi[label] = valore if valore is not None else None
+
+    return prezzi

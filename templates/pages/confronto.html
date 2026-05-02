@@ -1,6 +1,6 @@
 {% extends "layout/base.html" %}
 
-{% block title %}Confronto Prezzi — Domestic Energy{% endblock %}
+{% block title %}Confronto Prezzi &mdash; Domestic Energy{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -52,9 +52,7 @@
     {% if dati_a or dati_b or errore_a or errore_b %}
     {% set a_cheaper = dati_a and dati_b and dati_a.prezzo_kwh < dati_b.prezzo_kwh %}
     {% set b_cheaper = dati_a and dati_b and dati_b.prezzo_kwh < dati_a.prezzo_kwh %}
-
     <div class="row g-4 justify-content-center">
-
         <div class="col-12 col-md-5">
             {% if errore_a %}
             <div class="alert alert-danger rounded-4">{{ errore_a }}</div>
@@ -62,14 +60,14 @@
             <div class="card shadow-sm border-0 rounded-4 h-100 {% if a_cheaper %}border border-success border-2{% endif %}">
                 <div class="card-body text-center p-4">
                     {% if a_cheaper %}
-                    <span class="badge bg-success mb-3">Più economico</span>
+                    <span class="badge bg-success mb-3">Pi&ugrave; economico</span>
                     {% endif %}
                     <h2 class="h4 mb-4">{{ paesi.get(dati_a.paese, dati_a.paese) }}</h2>
                     <p class="display-6 fw-bold {% if a_cheaper %}text-success{% else %}text-body{% endif %} mb-1">
                         {{ "%.4f"|format(dati_a.prezzo_kwh) }}
                     </p>
-                    <p class="text-muted mb-4">€/kWh</p>
-                    <p class="text-muted small mb-0">Dato {{ dati_a.anno }} · {{ dati_a.fonte }}</p>
+                    <p class="text-muted mb-4">&euro;/kWh</p>
+                    <p class="text-muted small mb-0">Dato {{ dati_a.anno }} &middot; {{ dati_a.fonte }}</p>
                 </div>
             </div>
             {% endif %}
@@ -82,19 +80,18 @@
             <div class="card shadow-sm border-0 rounded-4 h-100 {% if b_cheaper %}border border-success border-2{% endif %}">
                 <div class="card-body text-center p-4">
                     {% if b_cheaper %}
-                    <span class="badge bg-success mb-3">Più economico</span>
+                    <span class="badge bg-success mb-3">Pi&ugrave; economico</span>
                     {% endif %}
                     <h2 class="h4 mb-4">{{ paesi.get(dati_b.paese, dati_b.paese) }}</h2>
                     <p class="display-6 fw-bold {% if b_cheaper %}text-success{% else %}text-body{% endif %} mb-1">
                         {{ "%.4f"|format(dati_b.prezzo_kwh) }}
                     </p>
-                    <p class="text-muted mb-4">€/kWh</p>
-                    <p class="text-muted small mb-0">Dato {{ dati_b.anno }} · {{ dati_b.fonte }}</p>
+                    <p class="text-muted mb-4">&euro;/kWh</p>
+                    <p class="text-muted small mb-0">Dato {{ dati_b.anno }} &middot; {{ dati_b.fonte }}</p>
                 </div>
             </div>
             {% endif %}
         </div>
-
     </div>
 
     {% if dati_a and dati_b and not a_cheaper and not b_cheaper %}
@@ -106,8 +103,35 @@
         </div>
     </div>
     {% endif %}
+    {% endif %}
 
+    {% if storico_primo and storico_secondo %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-12 col-lg-10">
+            <h2 class="h4 mb-3">Andamento storico prezzi kWh</h2>
+            <div class="chart-container">
+                <canvas id="confrontoPrezziChart"></canvas>
+            </div>
+        </div>
+    </div>
     {% endif %}
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% if storico_primo and storico_secondo %}
+<script>
+    const storicoPrimo = {{ storico_primo | tojson }};
+    const storicoSecondo = {{ storico_secondo | tojson }};
+
+    renderConfrontoPrezziChart(
+        "confrontoPrezziChart",
+        storicoPrimo,
+        storicoSecondo,
+        {{ nome_primo | tojson }},
+        {{ nome_secondo | tojson }}
+    );
+</script>
+{% endif %}
 {% endblock %}

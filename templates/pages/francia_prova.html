@@ -1,0 +1,14 @@
+{% block content %}
+
+<h2>DEBUG dati Francia</h2>
+
+{% for anno, prezzo in dati_francia|dictsort %}
+
+    {% set anno_int = anno[:4]|int %}
+
+    {% if anno_int >= 2007 and anno_int <= 2015 %}
+        <p> {{anno_int}} => {{prezzo}} </p>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

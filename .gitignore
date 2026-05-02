@@ -33,3 +33,5 @@ build/
 
 # Claude Code internal
 .claude/
+
+esercizi.py

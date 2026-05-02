@@ -16,6 +16,7 @@ from service.insights.insight_generator import generate_insight
 from service.eurostat_service import EurostatService
 from service.validators import check_input
 from service.countries import SUPPORTED_COUNTRIES
+from service.converts import *
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
@@ -63,6 +64,14 @@ def generic_error(error):
 def home():
     """Mostra la pagina iniziale dell'applicazione."""
     return render_template("pages/home.html")
+
+@app.route("/francia_prova")
+def francia_prova():
+    url = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_204?geo=FR&unit=KWH&currency=EUR&tax=I_TAX&nrg_cons=KWH2500-4999"
+    dati_francia = prezzi_francia(url)
+    print(dati_francia)
+    return render_template("pages/francia_prova.html", dati_francia=dati_francia)
+
 
 
 @app.route("/calcolo_elettrodomestico", methods=["GET", "POST"])
@@ -158,7 +167,6 @@ def calcolo_consumi():
 
     if request.method == "POST":
         paese = request.form.get("paese")
-
         try:
             n_persone = int(request.form.get("n_persone"))
             m_quadri = int(request.form.get("m_quadri"))
@@ -249,6 +257,10 @@ def confronto():
     errore_b = None
     paese_a = None
     paese_b = None
+    storico_primo = {}
+    storico_secondo = {}
+    nome_primo = ""
+    nome_secondo = ""
 
     if request.method == "POST":
         paese_a = request.form.get("paese_a", "").strip().lower()
@@ -272,6 +284,16 @@ def confronto():
             logger.warning("Errore paese B (%s): %s", paese_b, e)
             errore_b = "Non riesco a recuperare i dati per questo paese."
 
+        if dati_a:
+            storico_primo = dati_a.get("storico", {})
+            nome_primo = paesi.get(dati_a.get("paese"), paese_a.title())
+        if dati_b:
+            storico_secondo = dati_b.get("storico", {})
+            nome_secondo = paesi.get(dati_b.get("paese"), paese_b.title())
+
+        print(storico_primo)
+        print(storico_secondo)
+
     return render_template(
         "pages/confronto.html",
         paesi=paesi,
@@ -281,6 +303,10 @@ def confronto():
         errore_b=errore_b,
         paese_a=paese_a,
         paese_b=paese_b,
+        storico_primo=storico_primo,
+        storico_secondo=storico_secondo,
+        nome_primo=nome_primo,
+        nome_secondo=nome_secondo,
     )
 
 
