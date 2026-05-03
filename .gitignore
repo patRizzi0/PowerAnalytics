@@ -35,3 +35,4 @@ build/
 .claude/
 
 esercizi.py
+select_debug.py
