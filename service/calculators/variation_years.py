@@ -1,7 +1,10 @@
+from typing import Any
+
 from service.calculators.key_precedent import _last_key, _latest_key
 
 
-def _to_float(valore):
+def _to_float(valore: Any) -> float | None:
+    """Converte un valore numerico o testuale in float, se possibile."""
     if valore is None:
         return None
     try:
@@ -10,7 +13,8 @@ def _to_float(valore):
         return None
 
 
-def variations_years(storico):
+def variations_years(storico: dict[str, float]) -> float | None:
+    """Calcola la variazione percentuale tra ultimo e penultimo prezzo storico."""
     if not storico:
         return None
 

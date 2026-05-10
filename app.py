@@ -16,13 +16,13 @@ from service.insights.insight_generator import generate_insight
 from service.eurostat_service import EurostatService
 from service.validators import check_input
 from service.countries import SUPPORTED_COUNTRIES
-from service.converts import *
+from service.converts import prezzi_francia
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
 
 
-def render_user_error(message, status_code=500, title="Qualcosa non ha funzionato"):
+def render_user_error(message: str, status_code: int = 500, title: str = "Qualcosa non ha funzionato"):
     """Mostra un errore leggibile invece di lasciare l'utente davanti a un crash."""
     return render_template(
         "pages/error.html",
@@ -33,7 +33,8 @@ def render_user_error(message, status_code=500, title="Qualcosa non ha funzionat
 
 
 @app.errorhandler(404)
-def not_found_error(error):
+def not_found_error(error: HTTPException):
+    """Gestisce le richieste verso route non esistenti."""
     return render_user_error(
         "La pagina che stai cercando non esiste o e' stata spostata.",
         status_code=404,
@@ -42,7 +43,8 @@ def not_found_error(error):
 
 
 @app.errorhandler(HTTPException)
-def http_error(error):
+def http_error(error: HTTPException):
+    """Converte gli errori HTTP di Flask in pagine errore leggibili."""
     return render_user_error(
         error.description or "La richiesta non puo' essere completata.",
         status_code=error.code or 500,
@@ -52,6 +54,7 @@ def http_error(error):
 
 @app.errorhandler(Exception)
 def generic_error(error):
+    """Gestisce eccezioni inattese evitando di esporre dettagli tecnici."""
     logger.exception("Errore non gestito: %s", error)
     return render_user_error(
         "Si e' verificato un errore inatteso. Riprova tra poco.",
@@ -67,9 +70,10 @@ def home():
 
 @app.route("/francia_prova")
 def francia_prova():
+    """Mostra una pagina di prova con i prezzi Eurostat della Francia."""
     url = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_204?geo=FR&unit=KWH&currency=EUR&tax=I_TAX&nrg_cons=KWH2500-4999"
     dati_francia = prezzi_francia(url)
-    print(dati_francia)
+    logger.debug("Dati Francia: %s", dati_francia)
     return render_template("pages/francia_prova.html", dati_francia=dati_francia)
 
 
@@ -97,7 +101,7 @@ def elettrodomestici():
 
 
 @app.route("/device/<int:device_id>")
-def get_device(device_id):
+def get_device(device_id: int):
     """Espone i dati di un singolo elettrodomestico in formato JSON."""
     try:
         device = Device.query.get_or_404(device_id)
@@ -208,6 +212,7 @@ def calcolo_consumi():
             prezzo_kwh = consumi["prezzo_kwh"]
             storico = consumi.get("storico", {})
         except KeyError as e:
+            logger.warning("Dato mancante per generare gli insight: %s", e.args[0])
             return render_template(
                 "pages/calcolo_consumi.html",
                 error=f"Dato mancante per generare gli insight: {e.args[0]}"
@@ -291,8 +296,8 @@ def confronto():
             storico_secondo = dati_b.get("storico", {})
             nome_secondo = paesi.get(dati_b.get("paese"), paese_b.title())
 
-        print(storico_primo)
-        print(storico_secondo)
+        logger.debug("Storico primo paese (%s): %s", nome_primo, storico_primo)
+        logger.debug("Storico secondo paese (%s): %s", nome_secondo, storico_secondo)
 
     return render_template(
         "pages/confronto.html",

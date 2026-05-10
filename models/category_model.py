@@ -1,6 +1,9 @@
 from connection import db
 
+
 class Category(db.Model):
+    """Modello SQLAlchemy per una categoria di elettrodomestici."""
+
     __tablename__ = "categories_elettrodomestico"
 
     id = db.Column(db.Integer, primary_key=True)

@@ -1,7 +1,7 @@
 import requests
 
-
-def prezzi_francia(url):
+def prezzi_francia(url: str) -> dict[str, float | None] | None:
+    """Scarica e normalizza lo storico dei prezzi kWh per la pagina Francia."""
     response = requests.get(url, timeout=20)
     response.raise_for_status()
     data = response.json()

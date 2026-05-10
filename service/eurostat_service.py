@@ -15,12 +15,16 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class CacheEntry:
+    """Contiene una risposta Eurostat e le relative scadenze di cache."""
+
     data: dict
     expires_at: float
     stale_until: float
 
 
 class EurostatService:
+    """Client Eurostat con cache in memoria, retry HTTP e controllo concorrenza."""
+
     BASE_URL = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_204"
     CACHE_TTL_SECONDS = int(os.getenv("EUROSTAT_CACHE_TTL_SECONDS", "21600"))
     STALE_TTL_SECONDS = int(os.getenv("EUROSTAT_STALE_TTL_SECONDS", "86400"))
@@ -83,12 +87,14 @@ class EurostatService:
 
     @classmethod
     def _cache_key(cls, codice_paese, banda):
+        """Normalizza paese e fascia consumo nella chiave della cache."""
         paese = str(codice_paese or "").strip().upper()
         fascia = str(banda or "").strip().upper()
         return paese, fascia
 
     @classmethod
     def _get_from_cache(cls, chiave_cache, allow_stale=False):
+        """Restituisce una copia dei dati in cache se validi o stale ammessi."""
         with cls._lock:
             entry = cls._cache.get(chiave_cache)
             if entry is None:
@@ -106,6 +112,7 @@ class EurostatService:
 
     @classmethod
     def _save_in_cache(cls, chiave_cache, data):
+        """Salva una risposta in cache rispettando TTL e limite massimo elementi."""
         now = time.monotonic()
         entry = CacheEntry(
             data=copy.deepcopy(data),
@@ -122,6 +129,7 @@ class EurostatService:
 
     @classmethod
     def _register_inflight_request(cls, chiave_cache):
+        """Registra una richiesta in corso e indica se il chiamante deve eseguirla."""
         with cls._lock:
             if chiave_cache in cls._inflight:
                 return False
@@ -131,6 +139,7 @@ class EurostatService:
 
     @classmethod
     def _wait_for_inflight_request(cls, chiave_cache):
+        """Attende una richiesta parallela e prova a leggere il risultato dalla cache."""
         with cls._lock:
             event = cls._inflight.get(chiave_cache)
 
@@ -142,6 +151,7 @@ class EurostatService:
 
     @classmethod
     def _release_inflight_request(cls, chiave_cache):
+        """Sblocca i thread in attesa della richiesta associata alla chiave."""
         with cls._lock:
             event = cls._inflight.pop(chiave_cache, None)
 
@@ -150,6 +160,7 @@ class EurostatService:
 
     @classmethod
     def _fetch_from_eurostat(cls, codice_paese, banda):
+        """Esegue la chiamata HTTP a Eurostat e restituisce il JSON grezzo."""
         parametri = {
             "geo": str(codice_paese or "").strip().upper(),
             "unit": "KWH",
@@ -168,6 +179,7 @@ class EurostatService:
 
     @classmethod
     def _get_session(cls):
+        """Restituisce una sessione requests condivisa e inizializzata una sola volta."""
         with cls._lock:
             if cls._session is None:
                 cls._session = cls._build_session()
@@ -175,6 +187,7 @@ class EurostatService:
 
     @staticmethod
     def _build_session():
+        """Costruisce una sessione HTTP con adapter e retry configurati."""
         retry_strategy = EurostatService._build_retry_strategy()
         adapter = HTTPAdapter(
             max_retries=retry_strategy,
@@ -188,6 +201,7 @@ class EurostatService:
 
     @classmethod
     def _build_retry_strategy(cls):
+        """Configura la strategia di retry per errori temporanei Eurostat."""
         retry_strategy = Retry(
             total=cls.RETRY_TOTAL,
             connect=cls.RETRY_TOTAL,
