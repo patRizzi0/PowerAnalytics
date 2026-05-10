@@ -19,8 +19,11 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
+    """Aggiunge la colonna description alla tabella categorie."""
     op.add_column('categories_elettrodomestico',
     sa.Column('description', sa.String(length=200), nullable=True))
 
+
 def downgrade() -> None:
+    """Rimuove la colonna description dalla tabella categorie."""
     op.drop_column('categories_elettrodomestico', 'description')

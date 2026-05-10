@@ -1,5 +1,12 @@
-def multiplier_consumi(n_persone):
-    """Restituisce il moltiplicatore dei consumi in base alla dimensione del nucleo."""
+def multiplier_consumi(n_persone: int) -> float:
+    """Restituisce il moltiplicatore dei consumi in base al nucleo familiare.
+
+    Args:
+        n_persone: Numero di persone che vivono nell'abitazione.
+
+    Returns:
+        Moltiplicatore dei consumi da applicare al consumo base.
+    """
     if n_persone == 1:
         return 1.00
     if n_persone == 2:

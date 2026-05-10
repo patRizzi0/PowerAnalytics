@@ -2,7 +2,8 @@ from service.calculators.key_precedent import _last_key, _latest_key
 from service.calculators.variation_years import variations_years
 
 
-def build_description(storico):
+def build_description(storico: dict[str, float]) -> str:
+    """Genera una descrizione testuale della variazione storica del prezzo kWh."""
     if not storico:
         return "Nessun dato storico disponibile per generare una descrizione."
 

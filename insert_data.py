@@ -55,10 +55,9 @@ try:
     cursor.execute(categories_sql)
     cursor.execute(devices_sql)
     conn.commit()
-    print("Data inserted successfully!")
+
 except Exception as e:
     conn.rollback()
-    print(f"Error: {e}")
 finally:
     cursor.close()
     conn.close()

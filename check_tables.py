@@ -18,8 +18,5 @@ FROM information_schema.columns
 WHERE table_name = 'categories';
 """)
 
-print("Tabelle nel DB:")
-for col in cursor.fetchall():
-    print(col)
 
 conn.close()

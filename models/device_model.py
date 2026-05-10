@@ -1,6 +1,9 @@
 from connection import db
 
+
 class Device(db.Model):
+    """Modello SQLAlchemy per un elettrodomestico calcolabile."""
+
     __tablename__ = "devices"
 
     id = db.Column(db.Integer, primary_key=True)

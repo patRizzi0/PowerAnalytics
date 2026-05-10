@@ -9,8 +9,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 COEFF_MQ = 24
 
 
-def carica_coefficiente(nome_file):
-    """Carica un file JSON dalla cartella data e restituisce i coefficienti."""
+def carica_coefficiente(nome_file: str) -> dict:
+    """Carica i coefficienti da un file JSON nella cartella data."""
     path = os.path.join(BASE_DIR, "..", "data", nome_file)
     with open(path, encoding="utf-8") as f:
         return json.load(f)
@@ -20,8 +20,36 @@ coeff_stagione = carica_coefficiente("coeff_stagione.json")
 coeff_tipo = carica_coefficiente("coeff_appartamento.json")
 
 
-def calcola_consumo_abitazione(paese, n_persone, m_quadri, stagione, tipo_abitazione):
-    """Calcola consumo annuo e costo stimato partendo dai dati del form."""
+def calcola_consumo_abitazione(
+    paese: str,
+    n_persone: int,
+    m_quadri: int,
+    stagione: str,
+    tipo_abitazione: str
+) -> dict:
+    """Stima consumo annuo e costo energetico di un'abitazione.
+
+    Il calcolo combina superficie, numero di persone, stagione, tipo di
+    abitazione e prezzo kWh recuperato da Eurostat per il paese indicato.
+
+    Args:
+        paese: Nome o codice del paese da usare per il prezzo Eurostat.
+        n_persone: Numero di persone che vivono nell'abitazione.
+        m_quadri: Superficie dell'abitazione in metri quadrati.
+        stagione: Stagione della simulazione. Valori ammessi: "estate",
+            "inverno", "primavera", "autunno".
+        tipo_abitazione: Chiave del tipo abitazione presente in
+            coeff_appartamento.json.
+
+    Raises:
+        RuntimeError: Se i valori numerici non sono validi, se il paese non
+            ha dati disponibili, se stagione o tipo abitazione non sono
+            supportati, o se il prezzo kWh non e' utilizzabile.
+
+    Returns:
+        Dizionario con consumo totale in kWh, prezzo kWh, costo stimato,
+        anno, paese, fonte e storico dei prezzi.
+    """
     try:
         n_persone = int(n_persone)
         m_quadri = float(m_quadri)

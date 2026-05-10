@@ -1,12 +1,32 @@
 import math
 import re
 import unicodedata
+from typing import Any, Dict, Optional, TypedDict, Union, cast
 
 from service.eurostat_service import EurostatService
 from service.countries import CODICI_PAESE
 
 
-def _normalizza_testo(valore):
+class ErroreEurostat(TypedDict):
+    errore: str
+
+
+class PrezzoEurostat(TypedDict):
+    paese: str
+    prezzo_kwh: float
+    unita: str
+    fascia_consumo: str
+    tipo_prezzo: str
+    anno: str
+    fonte: str
+    storico: Dict[str, float]
+
+
+RisultatoEurostat = Union[PrezzoEurostat, ErroreEurostat]
+JsonDict = Dict[str, Any]
+
+
+def _normalizza_testo(valore: Any) -> str:
     """Normalizza input utente rendendo coerenti spazi, accenti e maiuscole."""
     testo = str(valore or "").strip().lower()
     testo = testo.replace("-", " ").replace("_", " ")
@@ -17,7 +37,7 @@ def _normalizza_testo(valore):
     return " ".join(testo.split())
 
 
-def normalizza_codice_paese(paese):
+def normalizza_codice_paese(paese: str) -> str:
     """Converte i nomi del form nei codici ISO richiesti da Eurostat."""
     paese_norm = _normalizza_testo(paese)
     if not paese_norm:
@@ -25,7 +45,7 @@ def normalizza_codice_paese(paese):
     return CODICI_PAESE.get(paese_norm, paese_norm.upper())
 
 
-def _to_float(valore):
+def _to_float(valore: Any) -> Optional[float]:
     """Converte numeri Eurostat in float, gestendo stringhe con virgola."""
     if valore is None:
         return None
@@ -39,7 +59,10 @@ def _to_float(valore):
         return None
 
 
-def _indice_tempo_da_osservazione(indice_osservazione, data):
+def _indice_tempo_da_osservazione(
+    indice_osservazione: int,
+    data: JsonDict
+) -> Optional[int]:
     """Ricava l'indice della dimensione time da un indice flat JSON-stat."""
     dimensioni = data.get("id", [])
     dimensioni_size = data.get("size", [])
@@ -54,7 +77,7 @@ def _indice_tempo_da_osservazione(indice_osservazione, data):
     return (indice_osservazione // passo) % dimensioni_size[posizione_tempo]
 
 
-def _storico_da_eurostat(data):
+def _storico_da_eurostat(data: JsonDict) -> Dict[str, float]:
     """Costruisce uno storico {periodo: prezzo} dalla risposta JSON-stat."""
     valori = data.get("value", {})
     if not valori:
@@ -69,7 +92,7 @@ def _storico_da_eurostat(data):
     label_tempo = categoria_tempo.get("label", {})
     tempo_per_indice = {indice: chiave for chiave, indice in indici_tempo.items()}
 
-    storico = {}
+    storico: Dict[str, float] = {}
     for indice, valore in valori.items():
         try:
             indice_osservazione = int(indice)
@@ -85,10 +108,25 @@ def _storico_da_eurostat(data):
     return storico
 
 
-def converts_paese_eurostat(paese, banda="KWH2500-4999"):
-    """Restituisce prezzo kWh e metadati Eurostat per paese e fascia consumo."""
+def converts_paese_eurostat(
+    paese: str,
+    banda: str = "KWH2500-4999"
+) -> RisultatoEurostat:
+    """Restituisce prezzo kWh e metadati Eurostat per paese e fascia consumo.
+
+    Args:
+        paese: Nome o codice ISO del paese, per esempio "Italia" o "IT".
+        banda: Fascia di consumo Eurostat.
+
+    Raises:
+        RuntimeError: Se il paese e' vuoto o non valido.
+
+    Returns:
+        Un dizionario con i dati normalizzati Eurostat oppure un dizionario
+        {"errore": "..."} quando i dati non sono disponibili.
+    """
     codice_paese = normalizza_codice_paese(paese)
-    data = EurostatService.prendi_dati_grezzi(codice_paese, banda)
+    data = cast(Optional[JsonDict], EurostatService.prendi_dati_grezzi(codice_paese, banda))
 
     if data is None:
         return {"errore": "Dati Eurostat temporaneamente non disponibili"}

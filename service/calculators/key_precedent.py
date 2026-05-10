@@ -1,4 +1,4 @@
-def _periodo_sort_key(periodo):
+def _periodo_sort_key(periodo: str) -> tuple[int, int]:
     """Restituisce una chiave ordinabile per periodi Eurostat tipo 2025-S2."""
     testo = str(periodo)
     try:
@@ -14,14 +14,14 @@ def _periodo_sort_key(periodo):
     return anno, semestre
 
 
-def _latest_key(storico):
+def _latest_key(storico: dict) -> str | None:
     """Restituisce la chiave temporale piu' recente presente nello storico."""
     if not storico:
         return None
     return max(storico.keys(), key=_periodo_sort_key)
 
 
-def _last_key(storico):
+def _last_key(storico: dict) -> str | None:
     """Restituisce la chiave dello stesso periodo nell'anno precedente."""
     ultima = _latest_key(storico)
     if ultima is None:
