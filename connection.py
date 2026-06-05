@@ -9,12 +9,14 @@ load_dotenv()
 
 DATABASE_URL = getenv("DATABASE_URL")
 
-
-
 if not DATABASE_URL:
     raise RuntimeError("DATABASE_URL mancante. Configura il file .env")
 
-app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# Fix per Railway: converte postgres:// in postgresql://
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-db = SQLAlchemy(app)
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    db = SQLAlchemy(app)
