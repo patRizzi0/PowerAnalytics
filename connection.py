@@ -4,7 +4,6 @@ from os import getenv
 from dotenv import load_dotenv
 
 app = Flask(__name__)
-
 load_dotenv()
 
 DATABASE_URL = getenv("DATABASE_URL")
@@ -16,7 +15,6 @@ if not DATABASE_URL:
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-    db = SQLAlchemy(app)
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db = SQLAlchemy(app)
