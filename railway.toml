@@ -1,0 +1,3 @@
+[deploy]
+preDeployCommand = ["alembic upgrade head"]
+startCommand = "gunicorn app:app"
